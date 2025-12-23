@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bora Moto Oficial - Caruaru</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary-pink: #FF1493; 
+            --accent-blue: #00BFFF; 
+            --dark-bg: #121212; 
+            --card-bg: #1E1E1E; 
+            --white: #FFFFFF; 
+        }
+        
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Inter', sans-serif; background: #fff; overflow: hidden; }
+        #map { width: 100%; height: 100vh; position: absolute; z-index: 1; }
+
+        /* Bubble Compacta Centralizada */
+        .live-track-bubble {
+            position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9); color: white; padding: 8px 15px;
+            border-radius: 40px; display: flex; align-items: center; gap: 8px;
+            z-index: 2000; box-shadow: 0 4px 15px rgba(0,0,0,0.4); border: 1px solid var(--primary-pink);
+            animation: floatAnim 3s infinite ease-in-out; cursor: pointer; text-decoration: none;
+            backdrop-filter: blur(8px); width: max-content; max-width: 85%;
+        }
+        .live-track-bubble i { color: #4BB543; font-size: 1rem; }
+        .live-track-text { font-size: 0.75rem; font-weight: 700; line-height: 1.1; color: #FFFFFF; }
+        .live-track-text span { font-weight: 400; font-size: 0.65rem; display: block; color: #ccc; }
+
+        @keyframes floatAnim { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -8px); } }
+
+        /* FAQ Sidebar */
+        #faq-sidebar {
+            position: fixed; top: 0; left: -100%; width: 85%; max-width: 320px; height: 100%;
+            background: var(--dark-bg); z-index: 3000; transition: 0.4s ease;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5); padding: 20px; overflow-y: auto;
+        }
+        #faq-sidebar.active { left: 0; }
+        .close-faq { font-size: 1.8rem; color: var(--white); cursor: pointer; margin-bottom: 20px; display: block; }
+        .faq-item { margin-bottom: 20px; line-height: 1.5; border-bottom: 1px solid #333; padding-bottom: 15px; }
+        .faq-question { color: var(--white); font-weight: bold; display: block; margin-bottom: 8px; font-size: 1rem; }
+        .faq-answer { color: #ccc; font-size: 0.9rem; }
+
+        /* Widget Layout */
+        #widget-container {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: var(--dark-bg); color: var(--white); border-top-left-radius: 30px; border-top-right-radius: 30px;
+            transition: transform 0.5s cubic-bezier(0.85, 0, 0.15, 1); z-index: 1000; padding: 15px 25px 25px;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.3);
+        }
+        #widget-container.collapsed { transform: translateY(calc(100% - 75px)); }
+
+        .handle-wrapper { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 15px; cursor: pointer; }
+        .drag-handle { width: 50px; height: 5px; background: var(--white); border-radius: 10px; }
+        .tap-icon { color: var(--white); font-size: 1rem; animation: handPulse 1.2s infinite ease-in-out; }
+        @keyframes handPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.6; } }
+
+        .widget-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .header-actions { display: flex; align-items: center; gap: 18px; }
+        .action-icon { color: var(--white); font-size: 1.4rem; cursor: pointer; text-decoration: none; }
+        .insta-btn { font-size: 1.6rem; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .type-selector { display: flex; gap: 10px; margin-bottom: 15px; }
+        .type-option { flex: 1; background: var(--card-bg); padding: 10px; border-radius: 12px; text-align: center; cursor: pointer; border: 2px solid transparent; font-weight: 600; transition: 0.3s; }
+        .type-option.active { border-color: var(--primary-pink); background: rgba(255, 20, 147, 0.1); }
+
+        .input-box { background: var(--card-bg); padding: 12px; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; border: 1px solid #333; }
+        .input-box input { background: transparent; border: none; color: white; width: 100%; outline: none; margin-left: 10px; font-size: 1rem; }
+        .input-box input::placeholder { color: #FFFFFF; opacity: 1; }
+
+        .price-card { background: #000; padding: 15px; border-radius: 15px; text-align: center; margin: 15px 0; border: 1px solid var(--primary-pink); }
+        .btn-submit { width: 85%; display: block; margin: 0 auto; background: var(--primary-pink); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+
+        @media (min-width: 600px) { #widget-container { width: 360px; left: 20px; bottom: 20px; border-radius: 30px; } }
+    </style>
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <div id="faq-sidebar">
+        <i class="fa-solid fa-xmark close-faq" onclick="toggleFAQ()"></i>
+        <div class="faq-item"><span class="faq-question">Quais as formas de pagamento?</span><span class="faq-answer">Pix, dinheiro (trocado) e cartões de débito ou crédito podendo parcelar!</span></div>
+        <div class="faq-item"><span class="faq-question">Como acompanho em tempo real?</span><span class="faq-answer">Após pedido confirmado, solicite no ícone acima e o motorista passará via Google Maps!</span></div>
+        <div class="faq-item"><span class="faq-question">Posso cancelar a corrida?</span><span class="faq-answer">Sim! Tolerância de máximo duas. Informe ao motorista pelo zap antes!</span></div>
+        <div class="faq-item"><span class="faq-question">É seguro?</span><span class="faq-answer">Sim! Todos os motoristas são verificados por documentação!</span></div>
+        <div class="faq-item"><span class="faq-question">Posso pedir pelo computador?</span><span class="faq-answer">Sim!</span></div>
+        <div class="faq-item"><span class="faq-question">Posso ser motorista?</span><span class="faq-answer">Sim! Acione o suporte!</span></div>
+        <div class="faq-item"><span class="faq-question">Posso ser um franqueado Bora Moto?</span><span class="faq-answer">Sim e em todo o Brasil! Cobramos apenas uma mensalidade simbólica e 100% dos lucros são seus! Utilize também em sua frota de motoristas entregadores do seu restaurante, farmácia, etc. O processo é bem simples e damos suporte!</span></div>
+    </div>
+
+    <a href="https://wa.me/5581991712613" target="_blank" class="live-track-bubble">
+        <i class="fa-solid fa-tower-broadcast"></i>
+        <div class="live-track-text">Pedido aceito?<span>Acompanhamento em tempo real no zap!</span></div>
+    </a>
+
+    <div id="widget-container" class="collapsed">
+        <div class="handle-wrapper" onclick="toggleWidget()">
+            <div class="drag-handle"></div>
+            <i class="fa-solid fa-hand-pointer tap-icon"></i>
+        </div>
+        
+        <div class="widget-header">
+            <h2 style="color:var(--accent-blue); font-size: 1.2rem; margin:0;">Solicitar Moto</h2>
+            <div class="header-actions">
+                <a href="https://wa.me/5581991712613" target="_blank" class="action-icon"><i class="fa-solid fa-headset"></i></a>
+                <i class="fa-solid fa-circle-question action-icon" onclick="toggleFAQ()"></i>
+                <a href="https://www.instagram.com/boramoto_oficial" target="_blank" class="action-icon insta-btn"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+        </div>
+
+        <div class="type-selector">
+            <div class="type-option active" id="opt-viagem" onclick="setType('Viagem')">Viagem</div>
+            <div class="type-option" id="opt-entrega" onclick="setType('Entrega')">Entrega</div>
+        </div>
+
+        <div class="input-box">
+            <i class="fa-solid fa-circle-dot" style="color:var(--primary-pink)"></i>
+            <input type="text" id="origem" placeholder="Onde você está?">
+        </div>
+
+        <div class="input-box">
+            <i class="fa-solid fa-location-dot" style="color:var(--accent-blue)"></i>
+            <input type="text" id="destino" placeholder="Para onde vamos?">
+        </div>
+
+        <div class="price-card">
+            <span id="valor-total" style="font-size: 1.6rem; font-weight: bold;">R$ 5,00</span>
+        </div>
+
+        <button class="btn-submit" onclick="sendWhatsApp()">CONFIRMAR PEDIDO</button>
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTWyqjeuSv8S5ur9pPJXXiPCGYgfdOMVc&libraries=places&callback=initApp" async defer></script>
+
+    <script>
+        let map, directionsService, directionsRenderer, autocompleteOrigem, autocompleteDestino;
+        let selectedType = 'Viagem';
+        let valorFinal = "5,00";
+
+        function initApp() {
+            const caruaru = {lat: -8.2822, lng: -35.9715};
+            map = new google.maps.Map(document.getElementById('map'), { center: caruaru, zoom: 14, disableDefaultUI: true });
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer({ 
+                map: map,
+                polylineOptions: { strokeColor: '#FF1493', strokeWeight: 5 }
+            });
+
+            const options = { componentRestrictions: {country: 'br'} };
+            autocompleteOrigem = new google.maps.places.Autocomplete(document.getElementById('origem'), options);
+            autocompleteDestino = new google.maps.places.Autocomplete(document.getElementById('destino'), options);
+
+            autocompleteOrigem.addListener('place_changed', calculateRoute);
+            autocompleteDestino.addListener('place_changed', calculateRoute);
+        }
+
+        function calculateRoute() {
+            const p1 = autocompleteOrigem.getPlace();
+            const p2 = autocompleteDestino.getPlace();
+            if (!p1 || !p1.geometry || !p2 || !p2.geometry) return;
+
+            directionsService.route({
+                origin: p1.geometry.location,
+                destination: p2.geometry.location,
+                travelMode: 'DRIVING'
+            }, (res, status) => {
+                if (status === 'OK') {
+                    directionsRenderer.setDirections(res);
+                    const dist = res.routes[0].legs[0].distance.value / 1000;
+                    
+                    // Cálculo: 5.00 Base + 0.90 por KM
+                    let total = 5.00 + (dist * 0.90);
+                    if (total < 5.00) total = 5.00;
+
+                    valorFinal = total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    document.getElementById('valor-total').innerText = "R$ " + valorFinal;
+                }
+            });
+        }
+
+        function setType(t) {
+            selectedType = t;
+            document.getElementById('opt-viagem').classList.toggle('active', t === 'Viagem');
+            document.getElementById('opt-entrega').classList.toggle('active', t === 'Entrega');
+        }
+
+        function toggleWidget() { document.getElementById('widget-container').classList.toggle('collapsed'); }
+        function toggleFAQ() { document.getElementById('faq-sidebar').classList.toggle('active'); }
+
+        function sendWhatsApp() {
+            const ori = document.getElementById('origem').value;
+            const des = document.getElementById('destino').value;
+            if(!ori || !des) return alert("Selecione os endereços na lista!");
+            
+            const msg = `⚡ *BORA MOTO - NOVO PEDIDO (${selectedType})*\n📍 *De:* ${ori}\n🏁 *Para:* ${des}\n💰 *Valor:* R$ ${valorFinal}`;
+            window.open(`https://wa.me/5581991712613?text=${encodeURIComponent(msg)}`);
+        }
+    </script>
+</body>
+</html>
