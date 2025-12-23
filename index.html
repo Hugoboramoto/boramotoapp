@@ -2,87 +2,205 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Bora Moto Oficial - Caruaru</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-:root{
---primary-pink:#FF1493;
---accent-blue:#00BFFF;
---dark-bg:#121212;
---card-bg:#1E1E1E;
---white:#FFFFFF;
+:root {
+  --primary-pink:#FF1493;
+  --accent-blue:#00BFFF;
+  --dark-bg:#121212;
+  --card-bg:#1E1E1E;
+  --white:#FFFFFF;
 }
 
+*{box-sizing:border-box}
 html,body{
-margin:0;
-padding:0;
-height:100%;
-font-family:Arial,Helvetica,sans-serif;
-background:#fff;
-overflow-x:hidden;
+  margin:0;
+  padding:0;
+  height:100%;
+  font-family:'Inter',sans-serif;
+  background:#000;
+  overflow:hidden;
 }
 
 #map{
-width:100%;
-height:100vh;
-position:absolute;
-z-index:1;
+  width:100%;
+  height:100%;
+  position:absolute;
+  z-index:1;
 }
 
-/* Bubble */
+/* BUBBLE CENTRAL */
 .live-track-bubble{
-position:fixed;
-top:15px;
-left:50%;
-transform:translateX(-50%);
-background:rgba(0,0,0,.9);
-color:#fff;
-padding:8px 15px;
-border-radius:40px;
-display:flex;
-gap:8px;
-align-items:center;
-z-index:2000;
-border:1px solid var(--primary-pink);
-text-decoration:none;
-animation:floatAnim 3s infinite;
+  position:fixed;
+  top:15px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(0,0,0,.9);
+  color:#fff;
+  padding:10px 18px;
+  border-radius:40px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  z-index:2000;
+  box-shadow:0 4px 15px rgba(0,0,0,.5);
+  border:1px solid var(--primary-pink);
+  animation:floatAnim 3s infinite ease-in-out;
+  text-decoration:none;
+  max-width:90%;
 }
+
+.live-track-bubble i{color:#4BB543;font-size:1.1rem}
+.live-track-text{font-size:.8rem;font-weight:700}
+.live-track-text span{display:block;font-size:.65rem;color:#ccc}
 
 @keyframes floatAnim{
-0%,100%{transform:translate(-50%,0)}
-50%{transform:translate(-50%,-8px)}
+  0%,100%{transform:translate(-50%,0)}
+  50%{transform:translate(-50%,-8px)}
 }
 
-/* Widget */
+/* FAQ */
+#faq-sidebar{
+  position:fixed;
+  top:0;
+  left:-100%;
+  width:85%;
+  max-width:320px;
+  height:100%;
+  background:var(--dark-bg);
+  z-index:3000;
+  transition:.4s;
+  padding:25px;
+  overflow-y:auto;
+}
+#faq-sidebar.active{left:0}
+.close-faq{font-size:1.8rem;color:#fff;cursor:pointer;margin-bottom:20px}
+
+.faq-item{border-bottom:1px solid #333;margin-bottom:15px;padding-bottom:15px}
+.faq-question{font-weight:700;color:#fff}
+.faq-answer{font-size:.85rem;color:#bbb}
+
+/* WIDGET */
 #widget-container{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-background:var(--dark-bg);
-color:#fff;
-border-radius:30px 30px 0 0;
-padding:15px 20px 25px;
-z-index:1000;
-transition:.5s;
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:var(--dark-bg);
+  color:#fff;
+  border-radius:25px 25px 0 0;
+  z-index:1000;
+  padding:15px 20px 30px;
+  transition:.5s;
+}
+#widget-container.collapsed{
+  transform:translateY(calc(100% - 75px));
 }
 
-#widget-container.collapsed{
-transform:translateY(calc(100% - 75px));
+.handle-wrapper{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  cursor:pointer;
+}
+
+.drag-handle{
+  width:45px;
+  height:5px;
+  background:#555;
+  border-radius:10px;
+}
+
+.widget-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:20px 0;
+}
+
+.header-actions a,i{
+  color:#fff;
+  font-size:1.3rem;
+  margin-left:15px;
+  cursor:pointer;
+}
+
+.type-selector{
+  display:flex;
+  gap:10px;
+  margin-bottom:15px;
+}
+
+.type-option{
+  flex:1;
+  padding:12px;
+  background:var(--card-bg);
+  text-align:center;
+  border-radius:12px;
+  cursor:pointer;
+  border:2px solid transparent;
+}
+
+.type-option.active{
+  border-color:var(--primary-pink);
+}
+
+.input-box{
+  display:flex;
+  align-items:center;
+  background:var(--card-bg);
+  padding:14px;
+  border-radius:12px;
+  margin-bottom:10px;
+}
+
+.input-box input{
+  background:none;
+  border:none;
+  color:#fff;
+  width:100%;
+  margin-left:10px;
+  font-size:1rem;
+  outline:none;
+}
+
+.price-card{
+  background:#000;
+  border:1px solid var(--primary-pink);
+  border-radius:15px;
+  padding:18px;
+  text-align:center;
+  margin:15px 0;
+}
+
+#valor-total{
+  font-size:1.8rem;
+  font-weight:800;
 }
 
 .btn-submit{
-width:100%;
-padding:16px;
-background:var(--primary-pink);
-border:none;
-color:#fff;
-font-weight:bold;
-border-radius:12px;
-cursor:pointer;
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:12px;
+  background:var(--primary-pink);
+  color:#fff;
+  font-size:1.1rem;
+  font-weight:800;
+  cursor:pointer;
+}
+
+@media(min-width:600px){
+  #widget-container{
+    width:380px;
+    left:20px;
+    bottom:20px;
+    border-radius:25px;
+  }
 }
 </style>
 </head>
@@ -91,13 +209,90 @@ cursor:pointer;
 
 <div id="map"></div>
 
-<a class="live-track-bubble" href="https://wa.me/5581991712613" target="_blank">
-<i class="fa-solid fa-tower-broadcast"></i>
-<div>
-<strong>Pedido aceito?</strong><br>
-<span style="font-size:.7rem;color:#ccc">Acompanhe no WhatsApp</span>
-</div>
+<a href="https://wa.me/5581991712613" target="_blank" class="live-track-bubble">
+  <i class="fa-solid fa-tower-broadcast"></i>
+  <div class="live-track-text">
+    Pedido aceito?
+    <span>Acompanhamento em tempo real no Zap!</span>
+  </div>
 </a>
 
 <div id="widget-container" class="collapsed">
-<h2 style="color:var(--accent-blue)">Solicitar Moto</h2
+  <div class="handle-wrapper" onclick="toggleWidget()">
+    <div class="drag-handle"></div>
+  </div>
+
+  <div class="widget-header">
+    <h2 style="color:var(--accent-blue)">Solicitar Moto</h2>
+    <div class="header-actions">
+      <a href="https://wa.me/5581991712613" target="_blank"><i class="fa-solid fa-headset"></i></a>
+      <i class="fa-solid fa-circle-question" onclick="toggleFAQ()"></i>
+    </div>
+  </div>
+
+  <div class="type-selector">
+    <div class="type-option active" id="opt-viagem" onclick="setType('Viagem')">Viagem</div>
+    <div class="type-option" id="opt-entrega" onclick="setType('Entrega')">Entrega</div>
+  </div>
+
+  <div class="input-box">
+    <i class="fa-solid fa-circle-dot" style="color:var(--primary-pink)"></i>
+    <input id="origem" placeholder="Onde você está?">
+  </div>
+
+  <div class="input-box">
+    <i class="fa-solid fa-location-dot" style="color:var(--accent-blue)"></i>
+    <input id="destino" placeholder="Para onde vamos?">
+  </div>
+
+  <div class="price-card">
+    <span id="valor-total">R$ 5,00</span>
+  </div>
+
+  <button class="btn-submit" onclick="sendWhatsApp()">CONFIRMAR PEDIDO</button>
+</div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=SUA_API_KEY_AQUI&libraries=places&callback=initApp" async defer></script>
+
+<script>
+let map,directionsService,directionsRenderer,autocompleteOrigem,autocompleteDestino;
+let selectedType='Viagem';
+let valorFinal='5,00';
+
+function initApp(){
+  const caruaru={lat:-8.2822,lng:-35.9715};
+  map=new google.maps.Map(document.getElementById('map'),{center:caruaru,zoom:14,disableDefaultUI:true});
+  directionsService=new google.maps.DirectionsService();
+  directionsRenderer=new google.maps.DirectionsRenderer({map,polylineOptions:{strokeColor:'#FF1493',strokeWeight:5}});
+  autocompleteOrigem=new google.maps.places.Autocomplete(document.getElementById('origem'),{componentRestrictions:{country:'br'}});
+  autocompleteDestino=new google.maps.places.Autocomplete(document.getElementById('destino'),{componentRestrictions:{country:'br'}});
+  autocompleteOrigem.addListener('place_changed',calculateRoute);
+  autocompleteDestino.addListener('place_changed',calculateRoute);
+}
+
+function calculateRoute(){
+  const p1=autocompleteOrigem.getPlace();
+  const p2=autocompleteDestino.getPlace();
+  if(!p1?.geometry||!p2?.geometry)return;
+  directionsService.route({origin:p1.geometry.location,destination:p2.geometry.location,travelMode:'DRIVING'},(res,status)=>{
+    if(status==='OK'){
+      directionsRenderer.setDirections(res);
+      const km=res.routes[0].legs[0].distance.value/1000;
+      let total=5+(km*0.9);
+      valorFinal=total.toLocaleString('pt-BR',{minimumFractionDigits:2});
+      document.getElementById('valor-total').innerText='R$ '+valorFinal;
+    }
+  });
+}
+
+function setType(t){
+  selectedType=t;
+  document.getElementById('opt-viagem').classList.toggle('active',t==='Viagem');
+  document.getElementById('opt-entrega').classList.toggle('active',t==='Entrega');
+}
+
+function toggleWidget(){
+  document.getElementById('widget-container').classList.toggle('collapsed');
+}
+
+function sendWhatsA
