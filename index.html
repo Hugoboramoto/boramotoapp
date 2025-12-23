@@ -22,7 +22,7 @@ padding:0;
 height:100%;
 font-family:Arial,Helvetica,sans-serif;
 background:#fff;
-overflow:hidden;
+overflow-x:hidden;
 }
 
 #map{
@@ -100,22 +100,4 @@ cursor:pointer;
 </a>
 
 <div id="widget-container" class="collapsed">
-<h2 style="color:var(--accent-blue)">Solicitar Moto</h2>
-
-<input id="origem" placeholder="Onde você está?" style="width:100%;padding:10px;margin-bottom:8px">
-<input id="destino" placeholder="Para onde vamos?" style="width:100%;padding:10px">
-
-<p id="valor-total" style="font-size:1.6rem;font-weight:bold;text-align:center">R$ 5,00</p>
-
-<button class="btn-submit" onclick="sendWhatsApp()">CONFIRMAR PEDIDO</button>
-</div>
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTWyqjeuSv8S5ur9pPJXXiPCGYgfdOMVc&libraries=places&callback=initApp" async defer></script>
-
-<script>
-let map,autocompleteOrigem,autocompleteDestino;
-let valorFinal="5,00";
-
-function initApp(){
-const caruaru={lat:-8.2822,lng:-35.9715};
-map=new google.maps.Ma
+<h2 style="color:var(--accent-blue)">Solicitar Moto</h2
